@@ -13,10 +13,11 @@ $(document).ready(function() {
             // iterate through the pool of strings and for any string that
             // contains the substring `q`, add it to the `matches` array
             $.each(strs, function(i, str) {
-                if (substrRegex.test(str)) {
+                if (substrRegex.test(str.name)) {
                     // the typeahead jQuery plugin expects suggestions to a
                     // JavaScript object, refer to typeahead docs for more info
-                    matches.push({ value: str });
+                    matches.push({ value: str.name });
+                    $('#hotelids').val(str.hotelids);
                 }
             });
 
@@ -24,40 +25,39 @@ $(document).ready(function() {
         };
     };
 
-    var hotels = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-        'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
-        'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-        'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-        'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-        'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
-        'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
-        'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-        'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-    ];
+    var hotels = [
+        { name: 'Jufa Salzburg', hotelids: [1]}
+        ];
+
     var keywords = [
-        'Golf', 'Golfspielen', 'Golfen'
+        { name: 'Golf', hotelids: [1,2,5]},
+        { name: 'Golfspielen', hotelids: [1,2,5]},
+        { name: 'Ski', hotelids: [3,4,5]}
     ];
 
-        $('#gob_autocomplete').typeahead({
+    $('#gob_autocomplete').typeahead({
             hint: true,
             highlight: true,
-            minLength: 1
+            minLength: 1,
+            limit: 1
         },
-            {
-                name: 'keywords',
-                displayKey: 'value',
-                templates: {
-                    header: '<h3>##Keywords##</h3>'
-                },
-                source: substringMatcher(keywords)
+        {
+            name: 'keywords',
+            displayKey: 'value',
+            templates: {
+                header: '<h3>##Keywords##</h3>'
             },
+            source: substringMatcher(keywords),
+            limit: 1
+        },
         {
             name: 'hotels',
             displayKey: 'value',
             templates: {
                 header: '<h3>##Hotels##</h3>'
             },
-            source: substringMatcher(hotels)
+            source: substringMatcher(hotels),
+            limit: 1
         });
 
 });
