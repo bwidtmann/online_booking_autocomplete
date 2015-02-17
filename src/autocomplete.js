@@ -1,4 +1,4 @@
-$(document).ready(function() {
+var LoadAutocomplete = function() {
 
     var substringMatcher = function(strs) {
         return function findMatches(q, cb) {
@@ -17,7 +17,6 @@ $(document).ready(function() {
                     // the typeahead jQuery plugin expects suggestions to a
                     // JavaScript object, refer to typeahead docs for more info
                     matches.push({ value: str.name });
-                    $('#hotelids').val(str.hotelids);
                 }
             });
 
@@ -25,15 +24,30 @@ $(document).ready(function() {
         };
     };
 
-    var hotels = [
-        { name: 'Jufa Salzburg', hotelids: [1]}
-        ];
+    var getHotelIdsbyName = function(name) {
+        var hotelids, result;
 
-    var keywords = [
-        { name: 'Golf', hotelids: [1,2,5]},
-        { name: 'Golfspielen', hotelids: [1,2,5]},
-        { name: 'Ski', hotelids: [3,4,5]}
-    ];
+        var resultHotels = $.grep(hotels, function(e) {
+            return e.name === name;
+        });
+        var resultKeywords = $.grep(keywords, function(e) {
+            return e.name === name;
+        });
+        result = resultHotels.concat(resultKeywords);
+
+        if (result.length === 0) {
+            hotelids = []
+        } else if (result.length === 1) {
+            hotelids = result[0].hotelids;
+        } else {
+            hotelids = result[0].hotelids;
+        }
+        return hotelids;
+    };
+
+    var storeHotelIds = function(name) {
+        $('#hotelids').val(getHotelIdsbyName(name));
+    };
 
     $('#gob_autocomplete').typeahead({
             hint: true,
@@ -60,4 +74,10 @@ $(document).ready(function() {
             limit: 1
         });
 
-});
+    $('#gob_autocomplete').on('blur', function() {
+        storeHotelIds($('#gob_autocomplete').val());
+    });
+    $('#gob_autocomplete').on('typeahead:selected', function(event, data) {
+        storeHotelIds(data.value);
+    });
+};

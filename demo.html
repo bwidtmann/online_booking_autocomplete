@@ -7,7 +7,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="lib/typeahead.bundle.min.js"></script>
 
-
+    <script src="data/fixtures.js"></script>
     <script src="src/autocomplete.js"></script>
 
 
@@ -22,6 +22,12 @@
 
     <input id="hotelids" type="hidden" name="hotelids">
     <input id="gob_autocomplete">
+
+    <script>
+        $(document).ready(function() {
+            LoadAutocomplete();
+        });
+    </script>
 
 </body>
 </html>
